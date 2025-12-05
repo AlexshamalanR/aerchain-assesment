@@ -55,8 +55,8 @@ export default CreateRFP;
 ### 1. Imports
 
 ```tsx
-import React, { useState } from 'react';
-import { rfpsAPI } from '../api';
+import React, { useState } from "react";
+import { rfpsAPI } from "../api";
 ```
 
 - `React, useState` - React hook for state management
@@ -66,8 +66,8 @@ import { rfpsAPI } from '../api';
 
 ```tsx
 interface CreateRFPProps {
-  onBack: () => void;      // Called when user clicks "Back"
-  onSuccess: () => void;   // Called after RFP created (to refresh dashboard)
+  onBack: () => void; // Called when user clicks "Back"
+  onSuccess: () => void; // Called after RFP created (to refresh dashboard)
 }
 ```
 
@@ -85,16 +85,16 @@ const CreateRFP: React.FC<CreateRFPProps> = ({ onBack, onSuccess }) => {
 ### 4. State Management
 
 ```tsx
-const [description, setDescription] = useState('');
+const [description, setDescription] = useState("");
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 ```
 
-| State | Purpose |
-|-------|---------|
-| `description` | User's natural language input |
-| `loading` | Show "Creating..." while submitting |
-| `error` | Display error message if something fails |
+| State         | Purpose                                  |
+| ------------- | ---------------------------------------- |
+| `description` | User's natural language input            |
+| `loading`     | Show "Creating..." while submitting      |
+| `error`       | Display error message if something fails |
 
 ### 5. Handle Submission
 
@@ -102,7 +102,7 @@ const [error, setError] = useState<string | null>(null);
 const handleSubmit = async () => {
   // Validation
   if (!description.trim()) {
-    setError('Please enter a procurement description');
+    setError("Please enter a procurement description");
     return;
   }
 
@@ -110,20 +110,18 @@ const handleSubmit = async () => {
     // Start loading
     setLoading(true);
     setError(null);
-    
+
     // Call backend API
     await rfpsAPI.create(description);
-    
+
     // Success!
-    alert('RFP created successfully!');
-    setDescription('');  // Clear form
-    onSuccess();         // Refresh parent (Dashboard)
-    
+    alert("RFP created successfully!");
+    setDescription(""); // Clear form
+    onSuccess(); // Refresh parent (Dashboard)
   } catch (err) {
     // Show error
-    setError('Failed to create RFP');
+    setError("Failed to create RFP");
     console.error(err);
-    
   } finally {
     // Stop loading
     setLoading(false);
@@ -132,6 +130,7 @@ const handleSubmit = async () => {
 ```
 
 **Flow:**
+
 1. Validate input not empty
 2. Show loading state
 3. Call backend `rfpsAPI.create(description)`
@@ -143,6 +142,7 @@ const handleSubmit = async () => {
 ### 6. JSX (UI)
 
 **Back Button:**
+
 ```tsx
 <button onClick={onBack} className="btn btn-secondary">
   ← Back
@@ -150,6 +150,7 @@ const handleSubmit = async () => {
 ```
 
 **Title & Help Text:**
+
 ```tsx
 <h2>Create New RFP</h2>
 <p className="help-text">
@@ -158,13 +159,17 @@ const handleSubmit = async () => {
 ```
 
 **Error Display:**
+
 ```tsx
-{error && <div className="error-message">{error}</div>}
+{
+  error && <div className="error-message">{error}</div>;
+}
 ```
 
 Shows red error box only if error exists.
 
 **Form Input:**
+
 ```tsx
 <div className="form-group">
   <label>Procurement Requirement:</label>
@@ -184,13 +189,14 @@ Shows red error box only if error exists.
 - `placeholder` - Example text when empty
 
 **Submit Button:**
+
 ```tsx
 <button
   onClick={handleSubmit}
   className="btn btn-primary btn-large"
   disabled={loading}
 >
-  {loading ? 'Creating RFP...' : 'Create RFP'}
+  {loading ? "Creating RFP..." : "Create RFP"}
 </button>
 ```
 
@@ -199,6 +205,7 @@ Shows red error box only if error exists.
 - Shows "Create RFP" when ready
 
 **Examples Section:**
+
 ```tsx
 <div className="examples-section">
   <h3>Example Inputs:</h3>
@@ -224,13 +231,13 @@ Shows 2 example prompts to guide users.
 ```tsx
 <div className="examples-section">
   <h3>Example Inputs:</h3>
-  
+
   {/* Existing examples */}
   <div className="example">
     <strong>Office Equipment:</strong>
     <p>...</p>
   </div>
-  
+
   {/* NEW EXAMPLE - Add this */}
   <div className="example">
     <strong>Telecom Equipment:</strong>
@@ -248,7 +255,7 @@ Example: Add project name field
 
 ```tsx
 // 1. Add state
-const [projectName, setProjectName] = useState('');
+const [projectName, setProjectName] = useState("");
 
 // 2. Add to form
 <div className="form-group">
@@ -259,15 +266,15 @@ const [projectName, setProjectName] = useState('');
     onChange={(e) => setProjectName(e.target.value)}
     placeholder="e.g., Office Upgrade 2024"
   />
-</div>
+</div>;
 
 // 3. Include in submission
 const handleSubmit = async () => {
   if (!description.trim() || !projectName.trim()) {
-    setError('Please fill in all fields');
+    setError("Please fill in all fields");
     return;
   }
-  
+
   await rfpsAPI.create(description, projectName);
 };
 ```
@@ -281,7 +288,7 @@ const handleSubmit = async () => {
     setError('Please provide more details (at least 20 characters)');
     return;
   }
-  
+
   try {
     // ... rest of submission
   }
@@ -293,17 +300,20 @@ const handleSubmit = async () => {
 Instead of just text, show a spinner:
 
 ```tsx
-{loading ? (
-  <div className="loading-spinner">
-    <span className="spinner"></span>
-    Creating RFP (analyzing with AI...)
-  </div>
-) : (
-  'Create RFP'
-)}
+{
+  loading ? (
+    <div className="loading-spinner">
+      <span className="spinner"></span>
+      Creating RFP (analyzing with AI...)
+    </div>
+  ) : (
+    "Create RFP"
+  );
+}
 ```
 
 Then add CSS in `index.css`:
+
 ```css
 .loading-spinner {
   display: flex;
@@ -322,8 +332,12 @@ Then add CSS in `index.css`:
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 ```
 
@@ -405,13 +419,13 @@ User Flow:
 
 ## 🔗 Related Files
 
-| File | Purpose |
-|------|---------|
-| `src/App.tsx` | Calls CreateRFP with onSuccess/onBack |
-| `src/api.ts` | `rfpsAPI.create()` function |
-| `src/index.css` | Styles for `.create-rfp`, `.form-group`, etc. |
-| `/backend/src/routes/rfps.ts` | Handles POST /api/rfps |
-| `/backend/src/ai.ts` | `parseRFPFromNaturalLanguage()` |
+| File                          | Purpose                                       |
+| ----------------------------- | --------------------------------------------- |
+| `src/App.tsx`                 | Calls CreateRFP with onSuccess/onBack         |
+| `src/api.ts`                  | `rfpsAPI.create()` function                   |
+| `src/index.css`               | Styles for `.create-rfp`, `.form-group`, etc. |
+| `/backend/src/routes/rfps.ts` | Handles POST /api/rfps                        |
+| `/backend/src/ai.ts`          | `parseRFPFromNaturalLanguage()`               |
 
 ---
 
@@ -432,6 +446,7 @@ User Flow:
 ## 🎓 Learning Moment
 
 This file teaches you:
+
 - ✅ React hooks (useState)
 - ✅ Form handling in React
 - ✅ Async/await with try/catch

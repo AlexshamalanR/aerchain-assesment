@@ -44,6 +44,7 @@ frontend/src/
 **File:** `frontend/src/index.css`
 
 Find these sections and edit:
+
 ```css
 /* Colors */
 --primary: #007bff;
@@ -52,7 +53,7 @@ Find these sections and edit:
 --success: #28a745;
 
 /* Fonts */
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 font-size: 16px;
 ```
 
@@ -61,10 +62,7 @@ font-size: 16px;
 **File:** `frontend/src/pages/Dashboard.tsx` (example)
 
 ```tsx
-<button 
-  onClick={() => handleAction()} 
-  className="btn btn-primary"
->
+<button onClick={() => handleAction()} className="btn btn-primary">
   Click Me
 </button>
 ```
@@ -75,14 +73,14 @@ font-size: 16px;
 
 ```tsx
 // 1. Add state
-const [newField, setNewField] = useState('');
+const [newField, setNewField] = useState("");
 
 // 2. Add input
 <input
   value={newField}
   onChange={(e) => setNewField(e.target.value)}
   placeholder="Enter value"
-/>
+/>;
 
 // 3. Use in submission
 const handleSubmit = async () => {
@@ -98,16 +96,18 @@ const handleSubmit = async () => {
 **File:** `frontend/src/api.ts` (to add function) and any page (to use it)
 
 **Add to api.ts:**
+
 ```tsx
 export const myAPI = {
   getData: async () => {
-    const response = await api.get('/api/my-endpoint');
+    const response = await api.get("/api/my-endpoint");
     return response.data;
   },
 };
 ```
 
 **Use in component:**
+
 ```tsx
 useEffect(() => {
   const data = await myAPI.getData();
@@ -127,7 +127,7 @@ const handleAction = async () => {
     setError(null);
     // do something
   } catch (err) {
-    setError('Something went wrong!');
+    setError("Something went wrong!");
   }
 };
 
@@ -157,7 +157,7 @@ const handleAction = async () => {
 
 return (
   <button disabled={loading}>
-    {loading ? <span className="loading">...</span> : 'Submit'}
+    {loading ? <span className="loading">...</span> : "Submit"}
   </button>
 );
 ```
@@ -180,26 +180,29 @@ When something doesn't work:
 ## 📋 API Cheat Sheet
 
 ### RFPs
+
 ```tsx
-rfpsAPI.getAll()                    // Get all RFPs
-rfpsAPI.get(id)                     // Get single RFP
-rfpsAPI.create(description)         // Create RFP (AI parsing)
-rfpsAPI.send(id, vendorIds)         // Send RFP to vendors
+rfpsAPI.getAll(); // Get all RFPs
+rfpsAPI.get(id); // Get single RFP
+rfpsAPI.create(description); // Create RFP (AI parsing)
+rfpsAPI.send(id, vendorIds); // Send RFP to vendors
 ```
 
 ### Vendors
+
 ```tsx
-vendorsAPI.getAll()                 // Get all vendors
-vendorsAPI.create(vendor)           // Create vendor
-vendorsAPI.update(id, vendor)       // Update vendor
-vendorsAPI.delete(id)               // Delete vendor
+vendorsAPI.getAll(); // Get all vendors
+vendorsAPI.create(vendor); // Create vendor
+vendorsAPI.update(id, vendor); // Update vendor
+vendorsAPI.delete(id); // Delete vendor
 ```
 
 ### Proposals
+
 ```tsx
-proposalsAPI.getAll()               // Get all proposals
-proposalsAPI.add(rfpId, vendorId, data)  // Add proposal
-proposalsAPI.compare(rfpId)         // Compare proposals
+proposalsAPI.getAll(); // Get all proposals
+proposalsAPI.add(rfpId, vendorId, data); // Add proposal
+proposalsAPI.compare(rfpId); // Compare proposals
 ```
 
 ---
@@ -207,31 +210,37 @@ proposalsAPI.compare(rfpId)         // Compare proposals
 ## 🎨 CSS Class Reference
 
 ### Buttons
+
 ```css
 .btn                    /* Base button styling */
+/* Base button styling */
 .btn-primary            /* Blue submit button */
 .btn-secondary          /* Gray back/cancel button */
 .btn-danger             /* Red delete button */
-.btn-large              /* Bigger button */
+.btn-large; /* Bigger button */
 ```
 
 ### Forms
+
 ```css
 .form-group             /* Wrapper for label + input */
+/* Wrapper for label + input */
 .textarea-large         /* Large textarea */
 .error-message          /* Red error box */
-.success-message        /* Green success box */
+.success-message; /* Green success box */
 ```
 
 ### Cards & Layout
+
 ```css
-.rfp-card               /* RFP card in grid */
-.rfp-card:hover         /* Card hover effect */
-.rfp-grid               /* Grid of RFP cards */
-.examples-section       /* Examples area */
+.rfp-card/* RFP card in grid */
+.rfp-card: hover /* Card hover effect */ .rfp-grid /* Grid of RFP cards */
+  .examples-section;
+.rfp-card/* Examples area */;
 ```
 
 ### Tables
+
 ```css
 table                   /* Standard table */
 thead                   /* Table header */
@@ -245,8 +254,8 @@ tbody                   /* Table body */
 Copy & paste this when creating a new page:
 
 ```tsx
-import React, { useState, useEffect } from 'react';
-import { rfpsAPI } from '../api';  // Change to your API
+import React, { useState, useEffect } from "react";
+import { rfpsAPI } from "../api"; // Change to your API
 
 interface MyPageProps {
   onBack: () => void;
@@ -264,10 +273,10 @@ const MyPage: React.FC<MyPageProps> = ({ onBack }) => {
   const loadData = async () => {
     try {
       setLoading(true);
-      const result = await rfpsAPI.getAll();  // Change to your API
+      const result = await rfpsAPI.getAll(); // Change to your API
       setData(result);
     } catch (err) {
-      setError('Failed to load data');
+      setError("Failed to load data");
     } finally {
       setLoading(false);
     }
@@ -281,9 +290,9 @@ const MyPage: React.FC<MyPageProps> = ({ onBack }) => {
       <button onClick={onBack} className="btn btn-secondary">
         ← Back
       </button>
-      
+
       <h2>My Page</h2>
-      
+
       {/* Your content here */}
     </div>
   );
@@ -306,11 +315,11 @@ interface RFP {
   deliveryDays: number;
 }
 
-const rfp: RFP = { 
-  id: '1', 
-  title: 'Laptops', 
-  budget: 50000, 
-  deliveryDays: 30 
+const rfp: RFP = {
+  id: "1",
+  title: "Laptops",
+  budget: 50000,
+  deliveryDays: 30,
 };
 ```
 
@@ -324,7 +333,11 @@ interface MyComponentProps {
 }
 
 const MyComponent: React.FC<MyComponentProps> = ({ name, count, onClick }) => {
-  return <button onClick={onClick}>{name} ({count})</button>;
+  return (
+    <button onClick={onClick}>
+      {name} ({count})
+    </button>
+  );
 };
 ```
 
@@ -357,16 +370,19 @@ const MyComponent: React.FC<MyComponentProps> = ({ name, count, onClick }) => {
 ## 🆘 Common Issues
 
 **Issue:** "Cannot find module 'react'"
+
 ```bash
 npm install
 ```
 
 **Issue:** "Backend not responding"
+
 - Check Terminal 1: Is backend running?
 - Check http://localhost:4000/health
 - Make sure DATABASE_URL in backend/.env is correct
 
 **Issue:** "Port 3000 already in use"
+
 ```bash
 # Find process using port 3000
 lsof -i :3000
@@ -375,6 +391,7 @@ kill -9 <PID>
 ```
 
 **Issue:** "Vite is not defined"
+
 ```bash
 npm install
 npm run dev

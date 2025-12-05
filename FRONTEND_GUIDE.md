@@ -43,6 +43,7 @@ npm run dev
 ```
 
 **Output:**
+
 ```
   VITE v5.0.8  ready in 245 ms
 
@@ -61,32 +62,36 @@ open http://localhost:3000
 ## 📝 File Structure & What Each File Does
 
 ### `src/main.tsx`
+
 **Purpose:** React entry point  
 **What it does:** Renders the App component into the DOM
 
 ```tsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>,
-)
+  </React.StrictMode>
+);
 ```
 
 ---
 
 ### `src/App.tsx`
+
 **Purpose:** Main application component with page routing  
 **What it does:**
+
 - Manages current page state
 - Simple button-based navigation (not React Router)
 - Handles page switching
 
 **Key Components:**
+
 ```tsx
 // useState tracks which page user is viewing
 const [currentPage, setCurrentPage] = useState<'dashboard' | 'create' | 'vendors' | 'detail'>('dashboard');
@@ -104,6 +109,7 @@ const renderPage = () => {
 ```
 
 **How to add a new page:**
+
 1. Create file in `src/pages/NewPage.tsx`
 2. Add new case to renderPage() switch
 3. Add button in navigation header
@@ -111,6 +117,7 @@ const renderPage = () => {
 ---
 
 ### `src/api.ts`
+
 **Purpose:** Axios HTTP client with all API endpoints  
 **What it does:** Provides functions to call backend APIs
 
@@ -138,6 +145,7 @@ proposalsAPI.compare(rfpId)           // GET /api/proposals/compare/:rfpId
 ```
 
 **Example Usage:**
+
 ```tsx
 const rfps = await rfpsAPI.getAll();
 const newRfp = await rfpsAPI.create("I need 20 laptops...");
@@ -146,14 +154,17 @@ const newRfp = await rfpsAPI.create("I need 20 laptops...");
 ---
 
 ### `src/pages/Dashboard.tsx`
+
 **Purpose:** Display all RFPs in a grid  
 **What it does:**
+
 - Fetches all RFPs on page load
 - Shows RFP cards with title, budget, delivery time
 - Click card to view details
 - Shows proposal count per RFP
 
 **Key Features:**
+
 ```tsx
 // On mount, fetch RFPs
 useEffect(() => {
@@ -162,17 +173,20 @@ useEffect(() => {
 }, []);
 
 // Display as grid of cards
-{rfps.map(rfp => (
-  <div key={rfp.id} onClick={() => onSelectRFP(rfp.id)} className="rfp-card">
-    <h3>{rfp.title}</h3>
-    <p>Budget: ${rfp.budget}</p>
-    <p>Delivery: {rfp.deliveryDays} days</p>
-    <p>Proposals: {rfp.proposals?.length || 0}</p>
-  </div>
-))}
+{
+  rfps.map((rfp) => (
+    <div key={rfp.id} onClick={() => onSelectRFP(rfp.id)} className="rfp-card">
+      <h3>{rfp.title}</h3>
+      <p>Budget: ${rfp.budget}</p>
+      <p>Delivery: {rfp.deliveryDays} days</p>
+      <p>Proposals: {rfp.proposals?.length || 0}</p>
+    </div>
+  ));
+}
 ```
 
 **How to modify:**
+
 - Change card styling in `index.css` (.rfp-card)
 - Add new fields to display (warranty, terms, etc.)
 - Add filters (by budget, date range, etc.)
@@ -180,17 +194,20 @@ useEffect(() => {
 ---
 
 ### `src/pages/CreateRFP.tsx`
+
 **Purpose:** Create new RFPs from natural language  
 **What it does:**
+
 - Large textarea for user input
 - Shows examples to guide users
 - On submit, sends to backend for AI parsing
 - Backend converts natural language → structured RFP JSON
 
 **Key Features:**
+
 ```tsx
 // State for form
-const [description, setDescription] = useState('');
+const [description, setDescription] = useState("");
 const [loading, setLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 
@@ -203,6 +220,7 @@ const handleSubmit = async () => {
 ```
 
 **Example Inputs Shown:**
+
 ```
 "I need 20 laptops with 16GB RAM and 15 monitors 27-inch.
 Budget is $50,000 total. Need delivery within 30 days.
@@ -210,6 +228,7 @@ Payment terms should be net 30, and we need at least 1 year warranty."
 ```
 
 **How to modify:**
+
 - Add more example prompts
 - Change textarea rows
 - Add fields (department, project name, etc.)
@@ -217,14 +236,17 @@ Payment terms should be net 30, and we need at least 1 year warranty."
 ---
 
 ### `src/pages/Vendors.tsx`
+
 **Purpose:** Manage vendor master data (CRUD)  
 **What it does:**
+
 - List all vendors in a table
 - Add new vendor form
 - Delete vendors
 - Input validation
 
 **Key Features:**
+
 ```tsx
 // Fetch vendors on mount
 useEffect(() => {
@@ -235,7 +257,11 @@ useEffect(() => {
 // Add vendor
 const handleAddVendor = async () => {
   await vendorsAPI.create({
-    name, email, contactName, phone, notes
+    name,
+    email,
+    contactName,
+    phone,
+    notes,
   });
   setVendors(await vendorsAPI.getAll()); // Refresh
 };
@@ -243,11 +269,12 @@ const handleAddVendor = async () => {
 // Delete vendor
 const handleDelete = async (id) => {
   await vendorsAPI.delete(id);
-  setVendors(vendors.filter(v => v.id !== id));
+  setVendors(vendors.filter((v) => v.id !== id));
 };
 ```
 
 **Form Fields:**
+
 - Name (required)
 - Email (required, unique)
 - Contact Name
@@ -255,6 +282,7 @@ const handleDelete = async (id) => {
 - Notes
 
 **How to modify:**
+
 - Add new fields (address, category, rating)
 - Add edit functionality
 - Add bulk import/export
@@ -262,8 +290,10 @@ const handleDelete = async (id) => {
 ---
 
 ### `src/pages/RFPDetail.tsx`
+
 **Purpose:** View RFP details and manage proposals  
 **What it does:**
+
 - Display full RFP information
 - Show items list
 - Select vendors and send RFP
@@ -273,6 +303,7 @@ const handleDelete = async (id) => {
 **Key Sections:**
 
 **1. RFP Information Display**
+
 ```tsx
 <div className="rfp-header">
   <h2>{rfp.title}</h2>
@@ -287,86 +318,98 @@ const handleDelete = async (id) => {
 ```
 
 **2. Items List**
+
 ```tsx
-{rfp.structuredJson?.items?.map((item) => (
-  <tr key={item.id}>
-    <td>{item.name}</td>
-    <td>{item.quantity}</td>
-    <td>{item.specifications}</td>
-    <td>{item.priority}</td>
-  </tr>
-))}
+{
+  rfp.structuredJson?.items?.map((item) => (
+    <tr key={item.id}>
+      <td>{item.name}</td>
+      <td>{item.quantity}</td>
+      <td>{item.specifications}</td>
+      <td>{item.priority}</td>
+    </tr>
+  ));
+}
 ```
 
 **3. Send to Vendors**
+
 ```tsx
 // Checkboxes to select vendors
-{vendors.map(vendor => (
-  <label key={vendor.id}>
-    <input
-      type="checkbox"
-      onChange={() => toggleVendor(vendor.id)}
-    />
-    {vendor.name}
-  </label>
-))}
+{
+  vendors.map((vendor) => (
+    <label key={vendor.id}>
+      <input type="checkbox" onChange={() => toggleVendor(vendor.id)} />
+      {vendor.name}
+    </label>
+  ));
+}
 
 // Send button
-<button onClick={handleSendRFP}>Send RFP to Selected Vendors</button>
+<button onClick={handleSendRFP}>Send RFP to Selected Vendors</button>;
 ```
 
 **4. Proposals List**
+
 ```tsx
-{proposals.map(proposal => (
-  <div className="proposal">
-    <p>Vendor: {proposal.vendor.name}</p>
-    <p>Price: ${proposal.totalPrice}</p>
-    <p>Delivery: {proposal.deliveryDays} days</p>
-    <p>Completeness: {proposal.completenessScore}%</p>
-  </div>
-))}
+{
+  proposals.map((proposal) => (
+    <div className="proposal">
+      <p>Vendor: {proposal.vendor.name}</p>
+      <p>Price: ${proposal.totalPrice}</p>
+      <p>Delivery: {proposal.deliveryDays} days</p>
+      <p>Completeness: {proposal.completenessScore}%</p>
+    </div>
+  ));
+}
 ```
 
 **5. Compare & Recommend**
-```tsx
-<button onClick={handleCompare}>Compare Proposals</button>
 
-{comparison && (
-  <div className="comparison-result">
-    <div className="recommendation">
-      <h3>Recommended: {comparison.recommendedVendorName}</h3>
-      <p>Explanation: {comparison.explanation}</p>
-    </div>
-    
-    <table className="scoring-table">
-      <thead>
-        <tr>
-          <th>Vendor</th>
-          <th>Price Score</th>
-          <th>Completeness Score</th>
-          <th>Delivery Score</th>
-          <th>Terms Score</th>
-          <th>Total Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {comparison.scores.map(score => (
-          <tr key={score.vendorId}>
-            <td>{score.vendorName}</td>
-            <td>{score.priceScore}</td>
-            <td>{score.completenessScore}</td>
-            <td>{score.deliveryScore}</td>
-            <td>{score.termsScore}</td>
-            <td><strong>{score.totalScore}</strong></td>
+```tsx
+<button onClick={handleCompare}>Compare Proposals</button>;
+
+{
+  comparison && (
+    <div className="comparison-result">
+      <div className="recommendation">
+        <h3>Recommended: {comparison.recommendedVendorName}</h3>
+        <p>Explanation: {comparison.explanation}</p>
+      </div>
+
+      <table className="scoring-table">
+        <thead>
+          <tr>
+            <th>Vendor</th>
+            <th>Price Score</th>
+            <th>Completeness Score</th>
+            <th>Delivery Score</th>
+            <th>Terms Score</th>
+            <th>Total Score</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
+        </thead>
+        <tbody>
+          {comparison.scores.map((score) => (
+            <tr key={score.vendorId}>
+              <td>{score.vendorName}</td>
+              <td>{score.priceScore}</td>
+              <td>{score.completenessScore}</td>
+              <td>{score.deliveryScore}</td>
+              <td>{score.termsScore}</td>
+              <td>
+                <strong>{score.totalScore}</strong>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 ```
 
 **How to modify:**
+
 - Add more RFP fields
 - Change comparison algorithm weights
 - Add export/print functionality
@@ -375,6 +418,7 @@ const handleDelete = async (id) => {
 ---
 
 ### `src/index.css`
+
 **Purpose:** Global styles for entire application  
 **What it does:** Professional, responsive design
 
@@ -382,38 +426,93 @@ const handleDelete = async (id) => {
 
 ```css
 /* Layout */
-.app-container { width: 100%; max-width: 1200px; margin: 0 auto; }
-.header { background: gradient; padding: 20px; }
-.content { padding: 20px; }
+.app-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.header {
+  background: gradient;
+  padding: 20px;
+}
+.content {
+  padding: 20px;
+}
 
 /* Cards */
-.rfp-card { border: 1px solid #ccc; padding: 15px; cursor: pointer; }
-.rfp-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.rfp-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  cursor: pointer;
+}
+.rfp-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 /* Forms */
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-textarea { width: 100%; padding: 10px; border: 1px solid #ccc; }
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
 
 /* Buttons */
-.btn { padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; }
-.btn-primary { background: #007bff; color: white; }
-.btn-secondary { background: #6c757d; color: white; }
-.btn-danger { background: #dc3545; color: white; }
+.btn {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
 
 /* Messages */
-.error-message { background: #f8d7da; color: #721c24; padding: 12px; }
-.success-message { background: #d4edda; color: #155724; padding: 12px; }
-.loading { display: inline-block; animation: spin 1s linear infinite; }
+.error-message {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 12px;
+}
+.success-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 12px;
+}
+.loading {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
-  .rfp-grid { grid-template-columns: 1fr; }
-  .header { padding: 10px; }
+  .rfp-grid {
+    grid-template-columns: 1fr;
+  }
+  .header {
+    padding: 10px;
+  }
 }
 ```
 
 **How to modify:**
+
 - Change colors in color variables
 - Adjust spacing (padding/margin)
 - Add dark mode styles
@@ -426,9 +525,10 @@ textarea { width: 100%; padding: 10px; border: 1px solid #ccc; }
 ### Add a New Page
 
 **1. Create component file:**
+
 ```tsx
 // src/pages/NewFeature.tsx
-import React from 'react';
+import React from "react";
 
 interface NewFeatureProps {
   onBack: () => void;
@@ -437,7 +537,9 @@ interface NewFeatureProps {
 const NewFeature: React.FC<NewFeatureProps> = ({ onBack }) => {
   return (
     <div className="new-feature">
-      <button onClick={onBack} className="btn btn-secondary">← Back</button>
+      <button onClick={onBack} className="btn btn-secondary">
+        ← Back
+      </button>
       {/* Your content here */}
     </div>
   );
@@ -447,6 +549,7 @@ export default NewFeature;
 ```
 
 **2. Update App.tsx:**
+
 ```tsx
 // Add to useState
 const [currentPage, setCurrentPage] = useState<'dashboard' | 'create' | 'vendors' | 'detail' | 'newfeature'>('dashboard');
@@ -464,28 +567,32 @@ case 'newfeature':
 ### Add a New API Function
 
 **1. Update src/api.ts:**
+
 ```tsx
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:4000',
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:4000",
 });
 
 export const newFeatureAPI = {
   getAll: async () => {
-    const response = await api.get('/api/newfeature');
+    const response = await api.get("/api/newfeature");
     return response.data;
   },
-  
+
   create: async (data: any) => {
-    const response = await api.post('/api/newfeature', data);
+    const response = await api.post("/api/newfeature", data);
     return response.data;
   },
 };
 ```
 
 **2. Use in component:**
+
 ```tsx
 const handleSubmit = async () => {
-  const result = await newFeatureAPI.create({ /* data */ });
+  const result = await newFeatureAPI.create({
+    /* data */
+  });
 };
 ```
 
@@ -494,6 +601,7 @@ const handleSubmit = async () => {
 ### Modify Styling
 
 **Option 1: Global styles (index.css)**
+
 ```css
 /* Add new class */
 .my-component {
@@ -511,10 +619,9 @@ const handleSubmit = async () => {
 ```
 
 **Option 2: Inline styles**
+
 ```tsx
-<div style={{ backgroundColor: '#f0f0f0', padding: '20px' }}>
-  Content
-</div>
+<div style={{ backgroundColor: "#f0f0f0", padding: "20px" }}>Content</div>
 ```
 
 ---
@@ -529,7 +636,7 @@ const handleAction = async () => {
     setError(null);
     const result = await apiFunction();
   } catch (err) {
-    setError('Something went wrong: ' + err.message);
+    setError("Something went wrong: " + err.message);
     console.error(err);
   }
 };
@@ -559,9 +666,7 @@ const handleSubmit = async () => {
 };
 
 return (
-  <button disabled={loading}>
-    {loading ? 'Processing...' : 'Submit'}
-  </button>
+  <button disabled={loading}>{loading ? "Processing..." : "Submit"}</button>
 );
 ```
 
@@ -573,10 +678,10 @@ return (
 
 ```tsx
 // Log data
-console.log('RFPs:', rfps);
+console.log("RFPs:", rfps);
 
 // Log errors
-console.error('Error:', error);
+console.error("Error:", error);
 
 // Open browser DevTools: F12 or Cmd+Option+I
 ```
@@ -589,6 +694,7 @@ console.error('Error:', error);
 4. See request/response
 
 **Example:**
+
 ```
 GET http://localhost:4000/api/rfps
 Status: 200 OK
@@ -600,12 +706,12 @@ Response: { id: "...", title: "...", ... }
 ```tsx
 // In api.ts, add logging
 api.interceptors.response.use(
-  response => {
-    console.log('API Response:', response);
+  (response) => {
+    console.log("API Response:", response);
     return response;
   },
-  error => {
-    console.error('API Error:', error.response);
+  (error) => {
+    console.error("API Error:", error.response);
     throw error;
   }
 );
@@ -618,20 +724,24 @@ api.interceptors.response.use(
 ### Daily Development Cycle
 
 1. **Start dev server:**
+
    ```bash
    npm run dev
    ```
 
 2. **Make changes** to React files
+
    - Vite hot reloads automatically
    - See changes in browser instantly
 
 3. **Check for errors:**
+
    - Browser console (F12)
    - Terminal output
    - Network tab
 
 4. **Test with backend:**
+
    - Make sure backend is running (Terminal 2: `npm run dev` in backend folder)
    - Make API calls from frontend
    - Verify responses in Network tab
@@ -669,11 +779,13 @@ Opens production build locally to test.
 ### React Hooks
 
 **useState** - Manage component state
+
 ```tsx
 const [value, setValue] = useState(initialValue);
 ```
 
 **useEffect** - Run code on mount/update
+
 ```tsx
 useEffect(() => {
   // Run on mount
@@ -691,7 +803,7 @@ interface RFP {
   deliveryDays: number;
 }
 
-const rfp: RFP = { id: '1', title: 'Laptops', budget: 50000, deliveryDays: 30 };
+const rfp: RFP = { id: "1", title: "Laptops", budget: 50000, deliveryDays: 30 };
 ```
 
 ### Props
