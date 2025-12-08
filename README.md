@@ -89,6 +89,48 @@ docker run --name rfp_postgres \
   postgres:15
 ```
 
+### Option C: Docker Compose (Recommended for PostgreSQL + Redis)
+
+Create a `docker-compose.yml` file in your project root with the following content:
+
+```yaml
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rfp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  db_data:
+  redis_data:
+```
+
+Then start both services with:
+
+```bash
+docker-compose up -d
+```
+
+This will launch both PostgreSQL and Redis containers, ready for your backend to connect.
+
+---
+
 ### 3. Environment Configuration
 
 #### Backend `.env`
