@@ -15,6 +15,6 @@ export const config = {
   imapUser: process.env.IMAP_USER || "",
   imapPass: process.env.IMAP_PASS || "",
   redisUrl: process.env.REDIS_URL || "redis://localhost:6379",
-  senderEmail: process.env.SENDER_EMAIL || "noreply@rfpsystem.com",
+  senderEmail: process.env.SENDER_EMAIL || "alexshamalan936@gmail.com",
   nodeEnv: process.env.NODE_ENV || "development",
 };

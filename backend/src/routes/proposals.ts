@@ -4,6 +4,16 @@ import { parseVendorProposal, compareProposalsAndRecommend } from "../ai";
 
 const router = Router();
 
+interface Vendor {
+  name: string;
+  email: string;
+}
+
+interface Proposal {
+  vendor: Vendor;
+  parsedJson: any;
+}
+
 // GET /api/proposals - List all proposals
 router.get("/", async (req: Request, res: Response) => {
   try {
@@ -80,7 +90,7 @@ router.post("/", async (req: Request, res: Response) => {
         rfpId,
         vendorId,
         rawEmailBody: emailBody,
-        parsedJson: parsed,
+        parsedJson: JSON.parse(JSON.stringify(parsed)),
         totalPrice: parsed.totalPrice,
         currency: parsed.currency,
         deliveryDays: parsed.deliveryDays,
@@ -130,7 +140,7 @@ router.get("/compare/:rfpId", async (req: Request, res: Response) => {
     console.log("🤖 Comparing proposals with AI...");
     const result = await compareProposalsAndRecommend(
       rfp.structuredJson as any,
-      rfp.proposals.map((p) => ({
+      rfp.proposals.map((p: Proposal) => ({
         vendorName: p.vendor.name,
         vendorEmail: p.vendor.email,
         data: p.parsedJson as any,

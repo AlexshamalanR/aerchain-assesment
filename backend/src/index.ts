@@ -5,6 +5,7 @@ import { connectDB, disconnectDB } from "./db";
 import rfpsRouter from "./routes/rfps";
 import vendorsRouter from "./routes/vendors";
 import proposalsRouter from "./routes/proposals";
+import { startEmailListener } from "./routes/emailParser";
 
 const app = express();
 
@@ -50,6 +51,7 @@ async function start() {
       console.log(`📧 Using email: ${config.smtpUser}`);
       console.log(`🤖 Using OpenAI API for AI tasks`);
     });
+    startEmailListener();
   } catch (error) {
     console.error("❌ Failed to start server:", error);
     process.exit(1);

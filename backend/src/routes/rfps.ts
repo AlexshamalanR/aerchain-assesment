@@ -68,7 +68,7 @@ router.post("/", async (req: Request, res: Response) => {
       data: {
         title: structured.title,
         descriptionRaw: description,
-        structuredJson: structured,
+        structuredJson: JSON.parse(JSON.stringify(structured)),
         budget: structured.budget,
         currency: structured.currency,
         deliveryDays: structured.deliveryDays,
